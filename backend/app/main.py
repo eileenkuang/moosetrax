@@ -6,6 +6,9 @@ from loguru import logger
 
 app = FastAPI()
 
+# Mount static folder
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
 # Initialize YOLOv8 model once at the start
 model = load_yolov8_pose_model()
 
