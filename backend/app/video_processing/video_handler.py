@@ -7,14 +7,14 @@ from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
 # --- Configuration ---
-VIDEO_PATH = './data_temp/IMG_2222.MOV'
+VIDEO_PATH = './data_temp/IMG_2221.MOV'
 OUTPUT_FOLDER = './pose_outputs'
 # NOTE: Ensure you have the 'pose_landmarker_full.task' (Level 1) in this path
-MODEL_PATH = './mediapipe/pose_landmarker_lite.task' 
+MODEL_PATH = './mediapipe/pose_landmarker_lite.task'
 CSV_OUTPUT = os.path.join(OUTPUT_FOLDER, 'biomechanical_data.csv')
 
 # TwelveLabs Specs: Complexity Level 1 is the "Full" model
-MIN_CONFIDENCE = 0.5
+MIN_CONFIDENCE = 0.4
 
 LANDMARK_NAMES = [
     "nose", "left_eye_inner", "left_eye", "left_eye_outer", "right_eye_inner", 
@@ -25,6 +25,28 @@ LANDMARK_NAMES = [
     "left_knee", "right_knee", "left_ankle", "right_ankle", "left_heel", 
     "right_heel", "left_foot_index", "right_foot_index"
 ]
+
+# Smoothing window size
+SMOOTHING_WINDOW_SIZE = 10
+
+# Smoothing function: Simple moving average
+def smooth_landmarks(landmarks_history):
+    smoothed_landmarks = []
+    for i in range(len(landmarks_history[0])):  # for each landmark
+        x_vals = [landmarks_history[j][i][0] for j in range(len(landmarks_history))]
+        y_vals = [landmarks_history[j][i][1] for j in range(len(landmarks_history))]
+        z_vals = [landmarks_history[j][i][2] for j in range(len(landmarks_history))]
+        vis_vals = [landmarks_history[j][i][3] for j in range(len(landmarks_history))]
+
+        # Moving average (smoothing) of the landmarks
+        smoothed_x = np.mean(x_vals)
+        smoothed_y = np.mean(y_vals)
+        smoothed_z = np.mean(z_vals)
+        smoothed_vis = np.mean(vis_vals)
+
+        smoothed_landmarks.append((smoothed_x, smoothed_y, smoothed_z, smoothed_vis))
+
+    return smoothed_landmarks
 
 def get_confidence_color(confidence):
     """Maps 0.0-1.0 confidence to BGR (Red -> Green)."""
@@ -51,6 +73,8 @@ def run_analysis():
     fps = cap.get(cv2.CAP_PROP_FPS)
     width, height = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
+    landmark_history = []
+
     with open(CSV_OUTPUT, 'w', newline='') as f:
         writer = csv.writer(f)
         header = ['frame', 'timestamp_ms']
@@ -75,12 +99,27 @@ def run_analysis():
                 # We take the first detected person (TwelveLabs logic)
                 landmarks = result.pose_landmarks[0]
                 
-                for i, lm in enumerate(landmarks):
-                    row.extend([lm.x, lm.y, lm.z, lm.visibility])
+                # Save landmarks to history
+                landmarks_data = []
+                for lm in landmarks:
+                    landmarks_data.append((lm.x, lm.y, lm.z, lm.visibility))
 
-                    # Visualization: Colored by Confidence
-                    cx, cy = int(lm.x * width), int(lm.y * height)
-                    color = get_confidence_color(lm.visibility)
+                # Add current landmarks data to history (limit history to smoothing window)
+                landmark_history.append(landmarks_data)
+                if len(landmark_history) > SMOOTHING_WINDOW_SIZE:
+                    landmark_history.pop(0)
+
+                # Smooth landmarks using moving average
+                smoothed_landmarks = smooth_landmarks(landmark_history)
+
+                # Write smoothed data to CSV
+                for smoothed_lm in smoothed_landmarks:
+                    row.extend(smoothed_lm)
+
+                # Visualization: Colored by Confidence
+                for lm in smoothed_landmarks:
+                    cx, cy = int(lm[0] * width), int(lm[1] * height)
+                    color = get_confidence_color(lm[3])
                     cv2.circle(frame, (cx, cy), 5, color, -1)
                     cv2.circle(frame, (cx, cy), 6, (255, 255, 255), 1)
             else:
