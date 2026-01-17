@@ -3,19 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Personal At-Home Trainer</title>
-
-  <!-- CSS -->
+  <title>MooseFit</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
   <div class="container">
     <h1>MooseFit</h1>
 
-    <!-- Controls Container -->
+    <!-- Controls -->
     <div class="controls-container">
-      <!-- Exercise Dropdown -->
       <select id="exerciseSelect">
         <option value="">Select Exercise</option>
         <option value="Squat">Squat</option>
@@ -27,8 +23,6 @@
         <option value="Push-ups">Push-ups</option>
         <option value="Pull-ups">Pull-ups</option>
       </select>
-
-      <!-- Dashboard Button -->
       <button class="dashboard-btn" id="dashboardBtn">Dashboard</button>
     </div>
 
@@ -38,17 +32,9 @@
       <input type="file" id="videoInput" accept="video/*" hidden />
     </div>
 
-    <!-- Analyze Button -->
-    <div class="analyze-container">
-      <button id="analyzeBtn">Analyze</button>
-    </div>
-
-    <!-- Output -->
     <pre id="output"></pre>
   </div>
 
-  <!-- JS -->
   <script src="main.js"></script>
 </body>
 </html>
-

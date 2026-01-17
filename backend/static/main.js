@@ -1,58 +1,50 @@
 let selectedExercise = "";
 let videoFile = null;
-let videoUrl = "";
 
 const exerciseSelect = document.getElementById("exerciseSelect");
 const videoInput = document.getElementById("videoInput");
 const videoContainer = document.getElementById("videoContainer");
 const output = document.getElementById("output");
-const dashboardBtn = document.getElementById("dashboardBtn");
 const uploadBtn = document.getElementById("uploadBtn");
-const analyzeBtn = document.getElementById("analyzeBtn");
+const dashboardBtn = document.getElementById("dashboardBtn");
 
-// Dropdown change
+// Dropdown selection
 exerciseSelect.addEventListener("change", (e) => {
   selectedExercise = e.target.value;
 });
 
-// Dashboard button click
+// Dashboard button (placeholder)
 dashboardBtn.addEventListener("click", () => {
   console.log("Dashboard clicked");
 });
 
-// Upload button click
+// Upload button click → open file picker
 uploadBtn.addEventListener("click", () => {
   videoInput.click();
 });
 
-// Video selection
-videoInput.addEventListener("change", (e) => {
+// Video selection → preview + upload to backend
+videoInput.addEventListener("change", async (e) => {
   videoFile = e.target.files[0];
-  if (videoFile) {
-    videoUrl = URL.createObjectURL(videoFile);
-    videoContainer.innerHTML = `<video src="${videoUrl}" controls></video>`;
-  }
-});
+  if (!videoFile) return;
 
-// Analyze button
-analyzeBtn.addEventListener("click", async () => {
-  if (!videoFile || !selectedExercise) {
-    alert("Please select an exercise and upload a video first");
-    return;
-  }
+  // 1️⃣ Show preview in browser
+  const videoUrl = URL.createObjectURL(videoFile);
+  videoContainer.innerHTML = `<video src="${videoUrl}" controls></video>`;
 
+  // 2️⃣ Send file to backend for saving
   const formData = new FormData();
   formData.append("file", videoFile);
-  formData.append("exercise", selectedExercise);
 
   try {
-    const res = await fetch("/api/analyze-video", {
+    const res = await fetch("/api/save-video", {
       method: "POST",
       body: formData
     });
+
     const data = await res.json();
-    output.textContent = JSON.stringify(data, null, 2);
+    output.textContent = `Video saved as: ${data.filename}`;
   } catch (err) {
-    output.textContent = "Error: " + err;
+    output.textContent = "Error saving video: " + err;
   }
 });
