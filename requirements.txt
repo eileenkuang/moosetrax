@@ -2,3 +2,10 @@ openai
 instructor
 pydantic
 python-dotenv
+langchain
+google-genai
+opencv-python
+numpy
+supabase
+uvicorn 
+fastapi
