@@ -273,7 +273,7 @@ def detect_rep_points(displacement):
     """
     Detect rep start, end, and max depth. Supports expected_reps for stricter single-rep detection.
     """
-    tolerance = 0.01  # Tolerance for "near 0" displacement; adjust based on data scale
+    tolerance = 0.05  # Tolerance for "near 0" displacement; adjust based on data scale
     import inspect
     frame = inspect.currentframe().f_back
     expected_reps = frame.f_locals.get('expected_reps', None)

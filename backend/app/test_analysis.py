@@ -94,10 +94,12 @@ def main():
     user_rep = user_reps[0]
     gt_length = gt_rep['end_frame'] - gt_rep['start_frame'] + 1
     user_length = user_rep['end_frame'] - user_rep['start_frame'] + 1
-    gt_rest = gt_rep.get('rest_duration_before_ms', 0)
-    user_rest = user_rep.get('rest_duration_before_ms', 0)
-    summary_lines.append(f"GT rep length: {gt_length} frames, rest before: {gt_rest} ms")
-    summary_lines.append(f"User rep length: {user_length} frames, rest before: {user_rest} ms")
+    # Calculate rest time as time between frame 0 and start frame (in frames and ms)
+    gt_rest_frames = gt_rep['start_frame']
+    user_rest_frames = user_rep['start_frame']
+    # If you have fps, you can convert to ms; otherwise, just show frames
+    summary_lines.append(f"GT rep length: {gt_length} frames, rest before: {gt_rest_frames} frames")
+    summary_lines.append(f"User rep length: {user_length} frames, rest before: {user_rest_frames} frames")
 
     # Issues: compare joint angles and speeds
     for signal in signal_cols:
