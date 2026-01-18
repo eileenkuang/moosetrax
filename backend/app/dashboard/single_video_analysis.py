@@ -1,7 +1,9 @@
 import json 
 from dotenv import load_dotenv
 from src.llm_engine import generate_analysis_script 
-
+from src.video_overlay import render_video 
+from src.database_handler import save_session_to_db
+from src.schemas import AnalysisResult
 load_dotenv() 
 
 def main(): 
@@ -36,5 +38,14 @@ def main():
 
     render_video(raw_video, json_script, final_video)
     
+    with open("data/final_analysis.json", "r") as f: 
+        data = json.load(f)
+
+    print("\n--- Saving to Cloud ---")
+    try: 
+        save_session_to_db(AnalysisResult(**data), video_name="demo_pushup.mp4")
+    except Exception as e: 
+        print(f" Database Error: {e}")
+
 if __name__ == "__main__":
     main()
