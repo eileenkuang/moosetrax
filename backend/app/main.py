@@ -78,13 +78,20 @@ async def analyze_video(file: UploadFile = File(...), exercise: str = Form(...))
         else:
             general_summary = "final_analysis.json not found"
         
+        # Check if annotated_output.mp4 exists
+        annotated_video_path = Path(__file__).parent / "dashboard" / "data" / "annotated_output.mp4"
+        annotated_video_url = ""
+        if annotated_video_path.exists():
+            annotated_video_url = "/api/videos/annotated_output.mp4"
+        
         return {
             "status": "success",
             "message": "Video analyzed successfully",
             "exercise": exercise,
             "video_path": video_path,
             "result": result,
-            "general_summary": general_summary
+            "general_summary": general_summary,
+            "annotated_video_url": annotated_video_url
         }
     except Exception as e:
         import traceback
@@ -93,5 +100,9 @@ async def analyze_video(file: UploadFile = File(...), exercise: str = Form(...))
             "message": str(e),
             "traceback": traceback.format_exc()
         }
+
+# Mount static files for dashboard data (videos, etc.)
+dashboard_data_path = Path(__file__).parent / "dashboard" / "data"
+app.mount("/api/videos", StaticFiles(directory=str(dashboard_data_path)), name="videos")
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")

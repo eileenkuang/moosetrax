@@ -77,6 +77,11 @@ analyzeBtn.addEventListener("click", async () => {
     } else {
       output.textContent = JSON.stringify(data, null, 2);
     }
+    
+    // Replace video with annotated_output.mp4 if available
+    if (data.annotated_video_url) {
+      videoContainer.innerHTML = `<video src="${data.annotated_video_url}" controls></video>`;
+    }
   } catch (err) {
     output.textContent = "Error analyzing video: " + err;
   }
