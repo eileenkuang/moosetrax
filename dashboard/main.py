@@ -28,15 +28,15 @@ def main():
     # print(f"Diagnosed Skill Level: {analysis_result.user_skill_level}")
     
     # # --- NEW: RUN VIDEO RENDERER ---
-    # from src.video_overlay import render_video
+    from src.video_overlay import render_video
     
-    # # Define paths
-    # # Note: If 'input_video.mp4' doesn't exist, it will create a black video test.
-    # raw_video = "data/input_video.mp4" 
-    # json_script = "data/final_analysis.json"
-    # final_video = "data/annotated_output.mp4"
+    # Define paths
+    # Note: If 'input_video.mp4' doesn't exist, it will create a black video test.
+    raw_video = "data/input_video.mp4" 
+    json_script = "data/final_analysis.json"
+    final_video = "data/annotated_output.mp4"
 
-    # render_video(raw_video, json_script, final_video)
+    render_video(raw_video, json_script, final_video)
     
     with open("data/final_analysis.json", "r") as f: 
         data = json.load(f)
