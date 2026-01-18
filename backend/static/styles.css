@@ -3,6 +3,21 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 2rem;
+  font-size: 1.3rem;
+}
+
+body.index-page {
+  background-image: url('bgimage/index.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body.dashboard-page {
+  background-image: url('bgimage/dashboard.png');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
 }
 
 .container {
@@ -11,7 +26,7 @@ body {
 }
 
 h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   font-style: italic;
   color: #2d3b3b;
   text-align: center;
@@ -23,23 +38,23 @@ button {
   border-radius: 9999px;
   border: none;
   cursor: pointer;
-  background-color: #d4e4e4;
+  background-color: #ECECEC;
   color: #2d3b3b;
   margin: 0.5rem;
 }
 
 button:hover {
-  background-color: #c4d4d4;
+  background-color: #DCDCDC;
 }
 
 #uploadBtn {
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 #analyzeBtn {
   padding: 1rem 2rem;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
 }
 
 select {
@@ -49,6 +64,7 @@ select {
   background-color: #d4e4d4;
   color: #2d3b3b;
   width: 200px;
+  font-size: 1.3rem;
 }
 
 .controls-container {
@@ -60,16 +76,16 @@ select {
 
 .dashboard-btn {
   padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid #2d3b3b;
-  background-color: #d4e4e4;
+  border-radius: 8px;
+  border: none;
+  background-color: #ECECEC;
   color: #2d3b3b;
   cursor: pointer;
   width: 200px;
 }
 
 .dashboard-btn:hover {
-  background-color: #c4d4d4;
+  background-color: #DCDCDC;
 }
 
 .video-container {
@@ -102,9 +118,11 @@ body {
   margin: 0;
   font-family: sans-serif;
   background: #9aafab;
+  font-size: 1.3rem;
 }
 
-.container, .dashboard {
+.container,
+.dashboard {
   max-width: 900px;
   margin: auto;
   padding: 2rem;
@@ -113,13 +131,21 @@ body {
 h1 {
   text-align: center;
   color: white;
+  font-size: 4rem;
 }
 
-button, select {
+.dashboard h1 {
+  color: #2d3b3b;
+}
+
+button,
+select {
   padding: 0.7rem 1rem;
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  background-color: #ECECEC;
+  font-size: 1.3rem;
 }
 
 .video-container {
@@ -129,8 +155,6 @@ button, select {
 }
 
 .dashboard .top-section {
-  display: flex;
-  gap: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -140,7 +164,32 @@ button, select {
 
 .stats p {
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+}
+
+.dashboard .stats p {
+  color: #2d3b3b;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.stats {
+  width: 100%;
+}
+
+.stats-row p:first-child {
+  grid-column: 1;
+}
+
+.stats-row p:last-child {
+  grid-column: 3;
+  text-align: right;
 }
 
 .cards {
@@ -154,8 +203,26 @@ button, select {
   background: white;
   border-radius: 16px;
   padding: 1rem;
+  font-size: 1.3rem;
+}
+
+.card:hover {
+  background: white;
 }
 
 .recommendations {
   color: white;
+  font-size: 1.3rem;
+}
+
+.dashboard .recommendations {
+  color: #2d3b3b;
+}
+
+.dashboard .recommendations ul {
+  color: #2d3b3b;
+}
+
+.video-box p {
+  font-size: 1.5rem;
 }
