@@ -71,7 +71,12 @@ analyzeBtn.addEventListener("click", async () => {
     });
 
     const data = await res.json();
-    output.textContent = JSON.stringify(data, null, 2);
+    // Display the general_summary from final_analysis.json
+    if (data.general_summary) {
+      output.textContent = data.general_summary;
+    } else {
+      output.textContent = JSON.stringify(data, null, 2);
+    }
   } catch (err) {
     output.textContent = "Error analyzing video: " + err;
   }

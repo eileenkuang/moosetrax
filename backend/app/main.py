@@ -3,6 +3,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import os
 import sys
+import json
 
 app = FastAPI()
 
@@ -63,12 +64,27 @@ async def analyze_video(file: UploadFile = File(...), exercise: str = Form(...))
         video_path = str(file_location)
         result = analyze(video_path)
         
+        # Read final_analysis.json and extract general_summary
+        final_analysis_path = Path(__file__).parent / "dashboard" / "data" / "final_analysis.json"
+        general_summary = ""
+        
+        if final_analysis_path.exists():
+            try:
+                with open(final_analysis_path, "r") as f:
+                    analysis_data = json.load(f)
+                    general_summary = analysis_data.get("general_summary", "")
+            except Exception as e:
+                general_summary = f"Error reading final_analysis.json: {str(e)}"
+        else:
+            general_summary = "final_analysis.json not found"
+        
         return {
             "status": "success",
             "message": "Video analyzed successfully",
             "exercise": exercise,
             "video_path": video_path,
-            "result": result
+            "result": result,
+            "general_summary": general_summary
         }
     except Exception as e:
         import traceback
